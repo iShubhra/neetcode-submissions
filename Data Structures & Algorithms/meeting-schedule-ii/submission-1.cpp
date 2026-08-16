@@ -1,0 +1,43 @@
+/**
+ * Definition of Interval:
+ * class Interval {
+ * public:
+ *     int start, end;
+ *     Interval(int start, int end) {
+ *         this->start = start;
+ *         this->end = end;
+ *     }
+ * }
+ */
+
+class Solution {
+public:
+    struct Compare {
+        bool operator()(const Interval& a, const Interval& b) {
+            return a.end > b.end;
+        }
+    };
+
+    int minMeetingRooms(vector<Interval>& intervals) {
+        sort(intervals.begin(), intervals.end(),
+        [](const Interval& a, const Interval& b) {
+            return a.start < b.start;
+        });
+
+        priority_queue<Interval, vector<Interval>, Compare> pq;
+        
+        int result = 0;
+
+        for ( int i = 0; i < intervals.size(); i++ ) {
+            if ( pq.empty() || pq.top().end > intervals[i].start ){
+                result++;
+                pq.push(intervals[i]);
+            }else {
+                pq.pop();
+                pq.push(intervals[i]);
+            }
+        }
+
+        return result;
+    }
+};
